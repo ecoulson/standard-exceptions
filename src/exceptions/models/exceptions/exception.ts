@@ -85,7 +85,7 @@ export class Exception extends Error {
                 this.message === other.message &&
                 innerExceptionEqual &&
                 this.dataEquals(other.data),
-            messageBuilder.toString().trim(),
+            messageBuilder.toString(),
         ];
     }
 
@@ -149,7 +149,7 @@ export class Exception extends Error {
             missingItems
         );
         isEqual = this.evaluateSharedKeys(isEqual, messageBuilder, sharedItems);
-        return [isEqual, messageBuilder.toString().trim()];
+        return [isEqual, messageBuilder.toString()];
     }
 
     private evaluateAdditionalKeys(

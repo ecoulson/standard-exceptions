@@ -12,6 +12,6 @@ export class ExceptionMessageBuilder {
     toString() {
         const result = this.strings.join('\n');
         this.strings = [];
-        return result;
+        return result.trim();
     }
 }
