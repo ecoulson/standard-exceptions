@@ -9,9 +9,16 @@ export class ExceptionMessageBuilder {
         this.strings.push(str);
     }
 
+    appendWithDepth(depth: number, str: string) {
+        const indentation = '  '.repeat(depth);
+        this.append(`${indentation}${str}`);
+    }
+
     toString() {
-        const result = this.strings.join('\n');
+        const result = this.strings
+            .filter((str) => str.trim().length !== 0)
+            .join('\n');
         this.strings = [];
-        return result.trim();
+        return result.trimEnd();
     }
 }

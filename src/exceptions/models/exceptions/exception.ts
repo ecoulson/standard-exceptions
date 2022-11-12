@@ -64,6 +64,13 @@ export class Exception extends Error {
     }
 
     equalsWithDetails(other: Exception): [boolean, string] {
+        return this.equalsWithDetailsHelper(other, 0);
+    }
+
+    private equalsWithDetailsHelper(
+        other: Exception,
+        depth: number
+    ): [boolean, string] {
         const messageBuilder = new ExceptionMessageBuilder();
         if (this.name !== other.name) {
             messageBuilder.append(
@@ -78,7 +85,7 @@ export class Exception extends Error {
         const [, details] = this.dataEqualsWithDetails(other.data);
         messageBuilder.append(details);
         const [innerExceptionEqual, innerDetails] =
-            this.innerExceptionEqualsWithDetails(other);
+            this.innerExceptionEqualsWithDetails(other, depth);
         messageBuilder.append(innerDetails);
         return [
             this.name === other.name &&
@@ -90,7 +97,8 @@ export class Exception extends Error {
     }
 
     private innerExceptionEqualsWithDetails(
-        other: Exception
+        other: Exception,
+        depth: number
     ): [boolean, string] {
         const messageBuilder = new ExceptionMessageBuilder();
         if (isNil(this.innerException) && isNil(other.innerException)) {
@@ -111,10 +119,17 @@ export class Exception extends Error {
         const thisInnerException = this.innerException as Exception;
         const otherInnerException = other.innerException as Exception;
         const [innerEquality, innerDetails] =
-            thisInnerException.equalsWithDetails(otherInnerException);
+            thisInnerException.equalsWithDetailsHelper(
+                otherInnerException,
+                depth + 1
+            );
         if (!innerEquality) {
             messageBuilder.append(`[${thisInnerException.name}]:`);
-            messageBuilder.append(`\t${innerDetails.replace(/\\n/g, '\n\t')}`);
+            innerDetails
+                .split('\n')
+                .forEach((detailLine) =>
+                    messageBuilder.appendWithDepth(1, detailLine)
+                );
         }
         return [innerEquality, messageBuilder.toString()];
     }

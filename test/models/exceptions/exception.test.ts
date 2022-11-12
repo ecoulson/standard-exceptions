@@ -357,18 +357,18 @@ describe('Exception Test Suite', () => {
             const exceptionA = new Exception('message', new Exception());
             const exceptionB = new Exception(
                 'message',
-                new Exception('inner message')
+                new Exception('inner message', new Exception())
             );
             const expectedResult = [
                 false,
                 [
                     '[Exception]:',
-                    '\tExpected exception message to be "inner message", was "".',
+                    '  Expected exception message to be "inner message", was "".',
+                    '  Expected an inner exception of type [Exception].',
                 ].join('\n'),
             ];
 
             const actualResult = exceptionA.equalsWithDetails(exceptionB);
-
             expect(actualResult).toEqual(expectedResult);
         });
 
