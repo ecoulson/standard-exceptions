@@ -127,10 +127,10 @@ export class Exception extends Error {
     dataEqualsWithDetails(map: ExceptionData): [boolean, string] {
         const messageBuilder = new ExceptionMessageBuilder();
         let isEqual = true;
-        if (this.data.size == 0 && map.size == 0) {
+        if (this.data.size === 0 && map.size === 0) {
             return [isEqual, messageBuilder.toString()];
         }
-        if (this.data.size != map.size) {
+        if (this.data.size !== map.size) {
             isEqual = false;
             messageBuilder.append(
                 `- Expected map item count to be ${map.size}, but found ${this.data.size}.`
@@ -157,7 +157,7 @@ export class Exception extends Error {
         messageBuilder: ExceptionMessageBuilder,
         additionalItems: ExceptionData
     ) {
-        if (additionalItems.size == 0) {
+        if (additionalItems.size === 0) {
             return isEqual;
         }
         for (const [key] of additionalItems.entries()) {
@@ -171,7 +171,7 @@ export class Exception extends Error {
         messageBuilder: ExceptionMessageBuilder,
         missingItems: ExceptionData
     ) {
-        if (missingItems.size == 0) {
+        if (missingItems.size === 0) {
             return isEqual;
         }
         for (const [key] of missingItems.entries()) {
@@ -185,7 +185,7 @@ export class Exception extends Error {
         messageBuilder: ExceptionMessageBuilder,
         sharedItems: ExceptionData
     ) {
-        if (sharedItems.size == 0) {
+        if (sharedItems.size === 0) {
             return isEqual;
         }
         for (const [key, value] of sharedItems.entries()) {
