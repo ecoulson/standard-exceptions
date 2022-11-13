@@ -1,4 +1,4 @@
-import { Exception } from '../../../src/exceptions/models/exceptions/exception';
+import { Exception } from '../../../src/models/exceptions/exception';
 
 describe('Exception Test Suite', () => {
     describe('fromError', () => {

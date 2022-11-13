@@ -1,4 +1,4 @@
-import { ExceptionMessageBuilder } from '../../../src/exceptions/models/message-builders/exception-message-builder';
+import { ExceptionMessageBuilder } from '../../../src/models/message-builders/exception-message-builder';
 
 describe('Exception Message Builder Test Suite', () => {
     describe('append', () => {
