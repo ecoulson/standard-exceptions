@@ -372,6 +372,32 @@ describe('Exception Test Suite', () => {
             expect(actualResult).toEqual(expectedResult);
         });
 
+        test('Should be false and have details when the nested inner exception does not match', () => {
+            const exceptionA = new Exception(
+                'message',
+                new Exception('inner message 1', new Exception())
+            );
+            const exceptionB = new Exception(
+                'message',
+                new Exception(
+                    'inner message 1',
+                    new Exception('inner message 2', new Exception())
+                )
+            );
+            const expectedResult = [
+                false,
+                [
+                    '[Exception]:',
+                    '  [Exception]:',
+                    '    Expected exception message to be "inner message 2", was "".',
+                    '    Expected an inner exception of type [Exception].',
+                ].join('\n'),
+            ];
+
+            const actualResult = exceptionA.equalsWithDetails(exceptionB);
+            expect(actualResult).toEqual(expectedResult);
+        });
+
         test('Should be false and have details when the messages do not match', () => {
             const exceptionA = new Exception('messageA');
             const exceptionB = new Exception('messageB');
