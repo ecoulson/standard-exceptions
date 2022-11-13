@@ -1,6 +1,6 @@
 {
     "name": "@the-standard/exceptions",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Better errors for node.js",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
