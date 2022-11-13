@@ -37,8 +37,12 @@ export class Exception extends Error {
         }
     }
 
+    containsDetails() {
+        return this.data.size > 0;
+    }
+
     throwIfContainsErrors() {
-        if (this.data.size > 0) {
+        if (this.containsDetails()) {
             throw this;
         }
     }
@@ -237,5 +241,34 @@ export class Exception extends Error {
         }
 
         return [additionalItems, missingItems, sharedItems];
+    }
+
+    toString(): string {
+        const messageBuilder = new ExceptionMessageBuilder();
+        let currentException: Exception | null = this;
+        while (!isNil(currentException)) {
+            messageBuilder.append(
+                `${currentException.name}: ${currentException.message}`.trim()
+            );
+            if (currentException.containsDetails()) {
+                const details = currentException.data;
+                for (const [key, values] of details.entries()) {
+                    messageBuilder.appendWithDepth(1, `"details": {`);
+                    messageBuilder.appendWithDepth(2, `"${key}": [`);
+                    values.forEach((value) => {
+                        messageBuilder.appendWithDepth(3, `"${value}"`);
+                    });
+                    messageBuilder.appendWithDepth(2, ']');
+                    messageBuilder.appendWithDepth(1, '}');
+                }
+            }
+            if (!isNil(currentException.stack)) {
+                const stackLines = currentException.stack.split('\n');
+                stackLines.shift();
+                messageBuilder.append(stackLines.join('\n'));
+            }
+            currentException = currentException.innerException;
+        }
+        return messageBuilder.toString();
     }
 }

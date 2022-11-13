@@ -72,7 +72,7 @@ describe('Exception Message Builder Test Suite', () => {
             const builder = new ExceptionMessageBuilder();
             const depth = 3;
             const messageToAppend = 'a';
-            const expectedIndentation = '  '.repeat(depth);
+            const expectedIndentation = '\t'.repeat(depth);
             const expectedMessage = `${expectedIndentation}${messageToAppend}`;
 
             builder.appendWithDepth(3, messageToAppend);

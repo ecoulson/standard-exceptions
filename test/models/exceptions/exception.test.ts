@@ -363,8 +363,8 @@ describe('Exception Test Suite', () => {
                 false,
                 [
                     '[Exception]:',
-                    '  Expected exception message to be "inner message", was "".',
-                    '  Expected an inner exception of type [Exception].',
+                    '\tExpected exception message to be "inner message", was "".',
+                    '\tExpected an inner exception of type [Exception].',
                 ].join('\n'),
             ];
 
@@ -388,9 +388,9 @@ describe('Exception Test Suite', () => {
                 false,
                 [
                     '[Exception]:',
-                    '  [Exception]:',
-                    '    Expected exception message to be "inner message 2", was "".',
-                    '    Expected an inner exception of type [Exception].',
+                    '\t[Exception]:',
+                    '\t\tExpected exception message to be "inner message 2", was "".',
+                    '\t\tExpected an inner exception of type [Exception].',
                 ].join('\n'),
             ];
 
@@ -604,6 +604,42 @@ describe('Exception Test Suite', () => {
                 exception.dataEqualsWithDetails(inputExceptionData);
 
             expect(actualDetails).toEqual(expectedDetails);
+        });
+    });
+
+    describe('toString', () => {
+        test('Should convert an exception to a string', () => {
+            const exception = new Exception(
+                'A message',
+                new Exception(
+                    'Inner message',
+                    new Exception(),
+                    new Map([['data', ['foo', 'bar']]])
+                )
+            );
+            const stackTracePattern = '(\\s+.*(\n|$))*';
+            const whiteSpacePattern = '\\s*';
+            const toStringRegex = new RegExp(
+                [
+                    'Exception: A message\n',
+                    stackTracePattern,
+                    'Exception: Inner message\n',
+                    `${whiteSpacePattern}"details": \\{\n`,
+                    `${whiteSpacePattern}"data": \\[\n`,
+                    `${whiteSpacePattern}"foo"\n`,
+                    `${whiteSpacePattern}"bar"\n`,
+                    `${whiteSpacePattern}\\]\n`,
+                    `${whiteSpacePattern}\\}\n`,
+                    stackTracePattern,
+                    'Exception:\n',
+                    stackTracePattern,
+                ].join(''),
+                'g'
+            );
+
+            const actualDisplayString = exception.toString();
+
+            expect(actualDisplayString).toMatch(toStringRegex);
         });
     });
 });

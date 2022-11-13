@@ -10,7 +10,7 @@ export class ExceptionMessageBuilder {
     }
 
     appendWithDepth(depth: number, str: string) {
-        const indentation = '  '.repeat(depth);
+        const indentation = '\t'.repeat(depth);
         this.append(`${indentation}${str}`);
     }
 
