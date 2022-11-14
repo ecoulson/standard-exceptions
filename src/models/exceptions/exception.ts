@@ -1,15 +1,25 @@
+import { Nullable } from '@the-standard/types';
 import { ExceptionData } from './exception-data';
 import { ExceptionMessageBuilder } from '../message-builders/exception-message-builder';
 import { isNil } from '@the-standard/conditions';
 
 export class Exception extends Error {
+    public readonly innerException: Nullable<Exception>;
+    public readonly data: ExceptionData;
+
     constructor(
-        public readonly message: string = '',
-        public readonly innerException: Exception | null = null,
-        public readonly data: ExceptionData = new Map()
+        message: string = '',
+        innerException: Nullable<Exception> = null,
+        data: Nullable<ExceptionData> = new Map()
     ) {
         super(message);
         this.name = this.constructor.name;
+        this.innerException = innerException;
+        if (isNil(data)) {
+            this.data = new Map();
+        } else {
+            this.data = data;
+        }
     }
 
     static fromError(error: unknown) {
@@ -245,7 +255,7 @@ export class Exception extends Error {
 
     toString(): string {
         const messageBuilder = new ExceptionMessageBuilder();
-        let currentException: Exception | null = this;
+        let currentException: Nullable<Exception> = this;
         while (!isNil(currentException)) {
             messageBuilder.append(
                 `${currentException.name}: ${currentException.message}`.trim()
